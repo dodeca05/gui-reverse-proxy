@@ -1,0 +1,55 @@
+{% macro flash_messages(flashes) %}
+  {% for category, message in flashes %}
+    <div class="alert alert-{{ category }}" role="status">{{ message }}</div>
+  {% endfor %}
+{% endmacro %}
+
+{% macro route_fields(values, errors) %}
+  <div class="field">
+    <label for="domain">도메인</label>
+    <input id="domain" name="domain" type="text" value="{{ values.domain }}" placeholder="test.com"
+           required maxlength="253" autocomplete="off" spellcheck="false"
+           {% if errors.get("domain") %}aria-invalid="true" aria-describedby="domain-error"{% endif %}>
+    {% if errors.get("domain") %}<p class="field-error" id="domain-error">{{ errors.get("domain") }}</p>{% endif %}
+  </div>
+  <div class="field">
+    <label for="target_service">Docker 서비스명</label>
+    <input id="target_service" name="target_service" type="text" value="{{ values.target_service }}"
+           placeholder="test-app" required maxlength="63" autocomplete="off" spellcheck="false"
+           {% if errors.get("target_service") %}aria-invalid="true" aria-describedby="service-error"{% endif %}>
+    {% if errors.get("target_service") %}<p class="field-error" id="service-error">{{ errors.get("target_service") }}</p>{% endif %}
+  </div>
+  <div class="field field-port">
+    <label for="target_port">내부 포트</label>
+    <input id="target_port" name="target_port" type="number" min="1" max="65535" value="{{ values.target_port }}"
+           placeholder="1000" required inputmode="numeric"
+           {% if errors.get("target_port") %}aria-invalid="true" aria-describedby="port-error"{% endif %}>
+    {% if errors.get("target_port") %}<p class="field-error" id="port-error">{{ errors.get("target_port") }}</p>{% endif %}
+  </div>
+  <div class="field field-checks">
+    <label class="check"><input type="checkbox" name="enabled" {% if values.enabled %}checked{% endif %}> 활성화</label>
+    <label class="check" title="해제하면 백엔드에 Host: 서비스명:포트 를 보냅니다">
+      <input type="checkbox" name="preserve_host" {% if values.preserve_host %}checked{% endif %}> 원래 Host 헤더 전달
+    </label>
+  </div>
+{% endmacro %}
+
+{% macro topbar(session) %}
+  <header class="topbar">
+    <a class="brand" href="/">
+      <span class="brand-mark" aria-hidden="true"></span>
+      Reverse Proxy
+    </a>
+    <div class="topbar-user">
+      <span class="muted">{{ session.username }}</span>
+      <form method="post" action="/logout">
+        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+        <button type="submit" class="btn btn-ghost btn-sm">로그아웃</button>
+      </form>
+    </div>
+  </header>
+{% endmacro %}
+
+{% macro timestamp(dt) %}
+  <time datetime="{{ dt.isoformat() }}">{{ dt.strftime('%Y-%m-%d %H:%M:%S') }} UTC</time>
+{% endmacro %}

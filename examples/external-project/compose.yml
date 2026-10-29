@@ -1,0 +1,24 @@
+# 별도 Docker Compose 프로젝트의 서비스를 프록시에 연결하는 예시.
+#
+#   docker compose -f examples/external-project/compose.yml up -d --build
+#
+# 관리자 페이지에서  api.test.com → api-server : 8080  라우팅을 추가하면
+#   curl -H "Host: api.test.com" http://<서버IP>/v1/items  → http://api-server:8080/v1/items
+name: external-demo
+
+services:
+  api-server:
+    build: ../test-app
+    image: reverse-proxy-example-test-app:latest
+    restart: unless-stopped
+    environment:
+      SERVICE_NAME: api-server
+      PORT: "8080"
+    # ports: 를 지정하지 않는다. 프록시가 내부 포트(8080)로 직접 연결한다.
+    networks:
+      - proxy-network
+
+networks:
+  proxy-network:
+    external: true
+    name: proxy-network

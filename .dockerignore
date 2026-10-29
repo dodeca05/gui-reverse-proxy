@@ -1,0 +1,23 @@
+# 이미지에는 app/ 과 requirements.txt 만 필요하다
+.git
+.gitignore
+.env
+.env.*
+!.env.example
+.venv
+venv
+**/__pycache__
+**/*.pyc
+.pytest_cache
+.mypy_cache
+.ruff_cache
+data
+*.db
+*.db-wal
+*.db-shm
+tests
+examples
+README.md
+compose.yml
+Dockerfile
+.dockerignore

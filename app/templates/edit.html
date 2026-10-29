@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% from "_macros.html" import flash_messages, route_fields, topbar, timestamp %}
+{% block title %}{{ route.domain }} 수정 · Reverse Proxy 관리자{% endblock %}
+{% block body %}
+{{ topbar(session) }}
+<main class="container container-narrow">
+  {{ flash_messages(flashes) }}
+  <p><a href="/" class="back">← 라우팅 목록</a></p>
+  <section class="card">
+    <h2>라우팅 수정</h2>
+    <p class="muted">현재 설정: <span class="domain">{{ route.domain }}</span> → <code>{{ route.target }}</code> · 최종 수정 {{ timestamp(route.updated_at) }}</p>
+    <form method="post" action="/routes/{{ route.id }}" class="route-form route-form-stacked" novalidate>
+      <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+      {{ route_fields(values, errors) }}
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">저장</button>
+        <a href="/" class="btn">취소</a>
+      </div>
+    </form>
+  </section>
+</main>
+{% endblock %}
